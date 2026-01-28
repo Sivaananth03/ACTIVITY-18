@@ -1,4 +1,4 @@
-ource "null_resource" "demo" {
+resource "null_resource" "demo" {
 
   provisioner "local-exec" {
 
@@ -7,5 +7,7 @@ ource "null_resource" "demo" {
   }
 
 }
+
+
 
 
