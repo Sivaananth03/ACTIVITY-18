@@ -1,0 +1,58 @@
+
+name: GitOps Terraform Apply
+
+
+
+on:
+
+  pull_request:
+
+    branches: [ main ]
+
+  push:
+
+    branches: [ main ]
+
+
+
+jobs:
+
+  terraform:
+
+    runs-on: ubuntu-latest
+
+
+
+    steps:
+
+      - name: Checkout code
+
+        uses: actions/checkout@v4
+
+
+
+      - name: Setup Terraform
+
+        uses: hashicorp/setup-terraform@v3
+
+
+
+      - name: Terraform Init
+
+        run: terraform init
+
+
+
+      - name: Terraform Plan
+
+        run: terraform plan
+
+
+
+      - name: Terraform Apply (only on merge)
+
+        if: github.event_name == 'push'
+
+        run: terraform apply -auto-approve
+
+
