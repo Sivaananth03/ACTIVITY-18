@@ -1,58 +1,74 @@
-
-name: GitOps Terraform Apply
-
-
-
+name: GitOps Terraform Deployment
+ 
+ 
 on:
-
+ 
   pull_request:
-
-    branches: [ main ]
-
+ 
+    branches: [ "main" ]
+ 
   push:
-
-    branches: [ main ]
-
-
-
+ 
+    branches: [ "main" ]
+ 
+ 
 jobs:
-
-  terraform:
-
+ 
+  terraform-plan:
+ 
+    if: github.event_name == 'pull_request'
+ 
     runs-on: ubuntu-latest
-
-
-
+ 
+ 
     steps:
-
+ 
       - name: Checkout code
-
+ 
         uses: actions/checkout@v4
-
-
-
+ 
+ 
       - name: Setup Terraform
-
+ 
         uses: hashicorp/setup-terraform@v3
-
-
-
+ 
+ 
       - name: Terraform Init
-
+ 
         run: terraform init
-
-
-
+ 
+ 
       - name: Terraform Plan
-
+ 
         run: terraform plan
-
-
-
-      - name: Terraform Apply (only on merge)
-
-        if: github.event_name == 'push'
-
+ 
+ 
+  terraform-apply:
+ 
+    if: github.event_name == 'push'
+ 
+    runs-on: ubuntu-latest
+ 
+    environment: production   # approval ONLY here
+ 
+ 
+    steps:
+ 
+      - name: Checkout code
+ 
+        uses: actions/checkout@v4
+ 
+ 
+      - name: Setup Terraform
+ 
+        uses: hashicorp/setup-terraform@v3
+ 
+ 
+      - name: Terraform Init
+ 
+        run: terraform init
+ 
+ 
+      - name: Terraform Apply
+ 
         run: terraform apply -auto-approve
-
-
